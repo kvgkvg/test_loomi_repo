@@ -1,0 +1,8 @@
+{
+  "name": "release-notes-agent",
+  "purpose": "Draft concise release notes from merged pull requests",
+  "constraints": [
+    "surface breaking changes first",
+    "group changes by category"
+  ]
+}
