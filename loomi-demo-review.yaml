@@ -1,0 +1,7 @@
+name: architecture-review
+input: pull_request_diff
+output: prioritized_review_findings
+rules:
+  - cite_the_affected_file
+  - explain_user_impact
+  - omit_speculative_findings
