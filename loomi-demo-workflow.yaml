@@ -1,0 +1,9 @@
+name: release-notes-workflow
+trigger: merged_pull_requests
+steps:
+  - collect_changes
+  - classify_changes
+  - draft_release_notes
+constraints:
+  - surface_breaking_changes_first
+  - keep_summary_concise
