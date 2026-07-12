@@ -1,0 +1,30 @@
+name: dependency-upgrade-workflow
+description: Monthly dependency upgrade sweep with automated risk notes
+trigger:
+  schedule: "0 9 1 * *"
+steps:
+  - id: scan
+    action: deps.outdated
+    params:
+      manifest: package.json
+      include_major: false
+  - id: risk_notes
+    action: llm.analyze
+    params:
+      model: claude-sonnet-5
+      instructions: >
+        For each outdated dependency, write one line: breaking-change risk
+        (low/med/high) based on changelog, and whether our code touches the
+        affected APIs. Cite the changelog URL. Skip dev-only deps with low risk.
+  - id: branch
+    action: git.create_branch
+    params:
+      name: "chore/deps-{{date}}"
+  - id: open_pr
+    action: github.open_pr
+    params:
+      title: "chore: monthly dependency upgrades"
+      draft: true
+constraints:
+  - Major version bumps always go in a separate PR
+  - PR stays draft until CI green twice in a row
