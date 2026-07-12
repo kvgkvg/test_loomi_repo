@@ -1,0 +1,29 @@
+name: weekly-report-workflow
+description: Compile team weekly report from Jira, GitHub and standup notes
+trigger:
+  schedule: "0 16 * * FRI"
+steps:
+  - id: collect_jira
+    action: jira.search
+    params:
+      jql: "project = LOOM AND updated >= -7d"
+  - id: collect_prs
+    action: github.list_merged_prs
+    params:
+      repo: kvgkvg/Loomi
+      since_days: 7
+  - id: summarize
+    action: llm.summarize
+    params:
+      model: claude-sonnet-5
+      instructions: >
+        Merge Jira tickets and PRs into one report with sections:
+        Shipped, In Review, Carry-over, Risks. Keep under 400 words.
+        Link every item to its ticket or PR. Do not invent progress.
+  - id: post
+    action: slack.post
+    params:
+      channel: "#team-weekly"
+constraints:
+  - LLM step must cite ticket IDs verbatim
+  - Skip posting if summarize step returns empty
