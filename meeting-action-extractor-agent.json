@@ -1,0 +1,13 @@
+{
+  "name": "meeting-action-extractor",
+  "description": "Agent that turns meeting transcripts into tracked action items",
+  "model": "claude-haiku-4-5",
+  "temperature": 0.1,
+  "system_prompt": "Extract action items from the meeting transcript. Each item needs: owner (must be a named participant), task, due date if stated. Ambiguous ownership goes to the meeting organizer with flag needs_owner. Do not invent deadlines. Ignore small talk and status updates without follow-up.",
+  "tools": ["create_task", "list_participants"],
+  "guardrails": {
+    "max_items": 20,
+    "require_owner": true,
+    "drop_items_without_verb": true
+  }
+}
