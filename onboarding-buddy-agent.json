@@ -1,0 +1,13 @@
+{
+  "name": "onboarding-buddy",
+  "description": "Agent that answers new-hire questions grounded in internal docs only",
+  "model": "claude-sonnet-5",
+  "temperature": 0.2,
+  "system_prompt": "You answer onboarding questions for new engineers. Ground every answer in the provided internal docs. If the docs do not cover the question, say so and point to the #onboarding Slack channel. Never guess about security policy, VPN setup, or payroll.",
+  "tools": ["search_docs", "list_team_contacts"],
+  "guardrails": {
+    "refuse_topics": ["payroll amounts", "security credentials"],
+    "max_answer_words": 250,
+    "require_citation": true
+  }
+}
